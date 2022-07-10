@@ -31,7 +31,7 @@ class Game {
     this.winningNumber = generateWinningNumber();
   }
   difference() {
-    return Math.abs(this.playersGuess - this.winningNumber);
+    return Math.abs(this.winningNumber - this.playersGuess);
   }
   isLower() {
     if (this.playersGuess < this.winningNumber) {
@@ -42,32 +42,33 @@ class Game {
   playersGuessSubmission(num1) {
     if (num1 > 100 || num1 < 1 || typeof num1 !== "number") {
       throw "That is an invalid guess.";
-    } else this.playersGuess = num1;
+    } else {
+      console.log((this.playersGuess = num1));
+      console.log("playersGuessSubmission");
+    }
     return this.checkGuess();
   }
 }
+debugger;
 Game.prototype.checkGuess = function () {
-  let count = 0;
-  while (count < 6) {
-    if (this.playersGuess === this.winningNumber) {
-      return "You Win!";
-    } else if (this.pastGuesses.includes(this.playersGuess)) {
-      return "You have already guessed that number.";
+  console.log("checkGuess");
+  if (this.playersGuess === this.winningNumber) {
+    return "You Win!";
+  } else if (this.pastGuesses.includes(this.playersGuess)) {
+    return "You have already guessed that number.";
+  } else {
+    this.pastGuesses.push(this.playersGuess);
+    if (this.pastGuesses.length === 5) {
+      return "You Lose.";
+    }
+    if (this.difference() < 10) {
+      return "You're burning up!";
+    } else if (this.difference() < 25) {
+      return "You're lukewarm.";
+    } else if (this.difference() < 50) {
+      return "You're a bit chilly.";
     } else {
-      this.pastGuesses.push(this.playersGuess);
-      count = count + 1;
-      if (count === 5) {
-        return "You Lose";
-      }
-      if (this.difference() < 10) {
-        return "You're burning up!";
-      } else if (this.difference() < 25) {
-        return "You're lukewarm.";
-      } else if (this.difference() < 50) {
-        return "You're a bit chilly.";
-      } else {
-        return "You're ice cold!";
-      }
+      return "You're ice cold!";
     }
   }
 };
@@ -77,12 +78,13 @@ function newGame() {
 }
 Game.prototype.provideHint = function () {
   let arr2 = [];
-  arr2.push(Game.winningNumber);
+  arr2.push(this.winningNumber);
   while (arr2.length < 3) {
     arr2.push(generateWinningNumber());
   }
+  console.log(arr2);
   return shuffle(arr2);
 };
-// console.log(game.playersGuessSubmission(72));
-// console.log(game.difference());
-// console.log(game.playersGuess);
+debugger;
+console.log(newGame().playersGuessSubmission(52));
+console.log(newGame().difference());
